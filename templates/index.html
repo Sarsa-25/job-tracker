@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Applications</title>
+</head>
+<body>
+    <h1>My Job Applications</h1>
+    <a href="/add">Add New Application</a>
+    
+    <table border="1">
+        <tr>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Status</th>
+        </tr>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.company }}</td>
+            <td>{{ app.position }}</td>
+            <td>{{ app.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -9,7 +9,8 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    return "Job Tracker is running!"
+    applications = Application.query.all()
+    return render_template("index.html", applications=applications)
 
 @app.route("/add", methods=["GET", "POST"])
 def add_application():
