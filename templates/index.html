@@ -12,12 +12,17 @@
             <th>Company</th>
             <th>Position</th>
             <th>Status</th>
+            <th>Delete</th>
+            <th>Edit</th>
+            
         </tr>
         {% for app in applications %}
         <tr>
             <td>{{ app.company }}</td>
             <td>{{ app.position }}</td>
             <td>{{ app.status }}</td>
+            <td><a href="/delete/{{ app.id }}">Delete</a></td>
+            <td><a href="/edit/{{ app.id }}">Edit</a></td>
         </tr>
         {% endfor %}
     </table>

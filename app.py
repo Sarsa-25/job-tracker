@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from models import db, Application
 from datetime import datetime
 
@@ -24,5 +24,27 @@ def add_application():
         return "Application added!"
     return render_template("add.html")
 
+
+@app.route("/edit/<int:app_id>", methods=["GET", "POST"])
+def edit_application(app_id):
+    app_to_edit = Application.query.get_or_404(app_id)
+    
+    if request.method == "POST":
+         app_to_edit.company = request.form["company"]
+         app_to_edit.position = request.form["position"]
+         app_to_edit.application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
+         db.session.commit()
+         return redirect("/")
+
+    return render_template("edit.html", application=app_to_edit)
+
+
+@app.route("/delete/<int:app_id>")
+def delete_application(app_id):
+    application = Application.query.get(app_id)
+    db.session.delete(application)
+    db.session.commit()
+    return redirect("/")
+    
 if __name__ == "__main__":
     app.run(debug=True)
