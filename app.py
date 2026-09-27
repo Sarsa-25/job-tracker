@@ -9,8 +9,22 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    applications = Application.query.all()
+    search_query = request.args.get("search")
+    status_filter = request.args.get("status")
+
+
+    applications_query = Application.query
+
+    if search_query:
+        applications_query  = applications_query.filter(Application.company.contains(search_query))
+
+    if status_filter:
+        applications_query  = applications_query.filter(Application.status == status_filter)
+    
+    applications = applications_query.all()
+    
     return render_template("index.html", applications=applications)
+
 
 @app.route("/add", methods=["GET", "POST"])
 def add_application():

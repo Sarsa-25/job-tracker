@@ -6,14 +6,29 @@
 <body>
     <h1>My Job Applications</h1>
     <a href="/add">Add New Application</a>
-    
+
+    <form method="GET">
+        <input type="text" name="search" placeholder="Search by company">
+
+        <select name="status">
+            <option value="">All Statuses</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Offer">Offer</option>
+
+        </select>
+        <button type="submit">Search</button>
+    </form>
+
     <table border="1">
         <tr>
             <th>Company</th>
             <th>Position</th>
             <th>Status</th>
-            <th>Delete</th>
             <th>Edit</th>
+            <th>Delete</th>
+
             
         </tr>
         {% for app in applications %}
@@ -21,8 +36,8 @@
             <td>{{ app.company }}</td>
             <td>{{ app.position }}</td>
             <td>{{ app.status }}</td>
-            <td><a href="/delete/{{ app.id }}">Delete</a></td>
             <td><a href="/edit/{{ app.id }}">Edit</a></td>
+            <td><a href="/delete/{{ app.id }}">Delete</a></td>
         </tr>
         {% endfor %}
     </table>
