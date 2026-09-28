@@ -23,7 +23,12 @@ def home():
     
     applications = applications_query.all()
     
-    return render_template("index.html", applications=applications)
+    total = Application.query.count()
+    applied = Application.query.filter_by(status="Applied").count()
+    interview = Application.query.filter_by(status="Interview").count()
+    rejected = Application.query.filter_by(status="Rejected").count()
+    offer = Application.query.filter_by(status="Offer").count()
+    return render_template("index.html", applications=applications, total=total, applied=applied, interview=interview, rejected=rejected, offer=offer)
 
 
 @app.route("/add", methods=["GET", "POST"])
