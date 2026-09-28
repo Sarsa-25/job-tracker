@@ -34,8 +34,12 @@ def home():
 @app.route("/add", methods=["GET", "POST"])
 def add_application():
     if request.method == "POST":
-        company = request.form["company"]
-        position = request.form["position"]
+        company = request.form["company"].strip()
+        position = request.form["position"].strip()
+        
+        if not company or not position:
+            return "Company and Position are required."
+
         application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
         status = request.form["status"]
         job_url = request.form.get("job_url") or None
@@ -46,6 +50,9 @@ def add_application():
             deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
         else:
             deadline = None
+        
+        if deadline and deadline < application_date:
+            return "Deadline cannot be before the application date."
         
         new_app = Application(company=company, position=position, application_date=application_date, status=status, job_url=job_url, notes=notes, deadline=deadline)
         db.session.add(new_app)
@@ -59,8 +66,13 @@ def edit_application(app_id):
     app_to_edit = Application.query.get_or_404(app_id)
     
     if request.method == "POST":
-        app_to_edit.company = request.form["company"]
-        app_to_edit.position = request.form["position"]
+        company = request.form["company"].strip()
+        position = request.form["position"].strip()
+        if not company or not position:
+            return "Company and Position are required."
+        
+        app_to_edit.company = company
+        app_to_edit.position = position
         app_to_edit.application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
         app_to_edit.status = request.form["status"]
         app_to_edit.job_url = request.form.get("job_url") or None
@@ -70,8 +82,12 @@ def edit_application(app_id):
             app_to_edit.deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
         else:
             app_to_edit.deadline = None
+            
+        if app_to_edit.deadline and app_to_edit.deadline < app_to_edit.application_date:
+            return "Deadline cannot be before the application date."
+    
         db.session.commit()
-        
+
 
         return redirect("/")
 
