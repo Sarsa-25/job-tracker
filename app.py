@@ -37,10 +37,20 @@ def add_application():
         company = request.form["company"]
         position = request.form["position"]
         application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
-        new_app = Application(company=company, position=position, application_date=application_date)
+        status = request.form["status"]
+        job_url = request.form.get("job_url") or None
+        notes = request.form.get("notes") or None
+        deadline_str = request.form.get("deadline")
+
+        if deadline_str:
+            deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+        else:
+            deadline = None
+        
+        new_app = Application(company=company, position=position, application_date=application_date, status=status, job_url=job_url, notes=notes, deadline=deadline)
         db.session.add(new_app)
         db.session.commit() 
-        return "Application added!"
+        return redirect("/")
     return render_template("add.html")
 
 
@@ -49,11 +59,21 @@ def edit_application(app_id):
     app_to_edit = Application.query.get_or_404(app_id)
     
     if request.method == "POST":
-         app_to_edit.company = request.form["company"]
-         app_to_edit.position = request.form["position"]
-         app_to_edit.application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
-         db.session.commit()
-         return redirect("/")
+        app_to_edit.company = request.form["company"]
+        app_to_edit.position = request.form["position"]
+        app_to_edit.application_date = datetime.strptime(request.form["application_date"], "%Y-%m-%d").date()
+        app_to_edit.status = request.form["status"]
+        app_to_edit.job_url = request.form.get("job_url") or None
+        app_to_edit.notes = request.form.get("notes") or None
+        deadline_str = request.form.get("deadline")       
+        if deadline_str:
+            app_to_edit.deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+        else:
+            app_to_edit.deadline = None
+        db.session.commit()
+        
+
+        return redirect("/")
 
     return render_template("edit.html", application=app_to_edit)
 

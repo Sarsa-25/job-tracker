@@ -28,6 +28,9 @@
             <th>Company</th>
             <th>Position</th>
             <th>Status</th>
+            <th>Deadline</th>
+            <th>Job URL</th>
+            <th>Notes</th>
             <th>Edit</th>
             <th>Delete</th>
 
@@ -38,6 +41,9 @@
             <td>{{ app.company }}</td>
             <td>{{ app.position }}</td>
             <td>{{ app.status }}</td>
+            <td>{{ app.deadline or '' }}</td>
+            <td>{{ app.job_url or '' }}</td> 
+            <td>{{ app.notes or '' }}</td>
             <td><a href="/edit/{{ app.id }}">Edit</a></td>
             <td><a href="/delete/{{ app.id }}">Delete</a></td>
         </tr>
