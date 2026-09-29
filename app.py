@@ -114,7 +114,7 @@ def edit_application(app_id):
 
 @app.route("/delete/<int:app_id>")
 def delete_application(app_id):
-    application = Application.query.get(app_id)
+    application = Application.query.get_or_404(app_id)
     db.session.delete(application)
     db.session.commit()
     return redirect("/")
