@@ -14,12 +14,12 @@
     {% endif %}
 
    <form method="POST">
-    <input type="text" name="company" placeholder="Company">
-    <input type="text" name="position" placeholder="Position">
-    <input type="date" name="application_date" placeholder="Application Date">
-    <input type="date" name="deadline" placeholder="Deadline">
-    <input type="url" name="job_url" placeholder="Job URL">
-    <textarea name="notes" placeholder="Notes"></textarea>
+    <input type="text" name="company" value="{{ form_data.get('company', '') }}">
+    <input type="text" name="position" value="{{ form_data.get('position', '') }}">
+    <input type="date" name="application_date" value="{{ form_data.get('application_date', '') }}">
+    <input type="date" name="deadline" value="{{ form_data.get('deadline', '') }}">
+    <input type="url" name="job_url" value="{{ form_data.get('job_url', '') }}">
+    <textarea name="notes">{{ form_data.get('notes', '') }}</textarea>
 
     <select name="status">
     <option value="Applied">Applied</option>

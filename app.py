@@ -37,10 +37,20 @@ def add_application():
         company = request.form["company"].strip()
         position = request.form["position"].strip()
         application_date_str = request.form.get("application_date")
+        
+        missing_fields = []
+        if not company:
+            missing_fields.append("Company")
+        if not position:
+            missing_fields.append("Position")
+        if not application_date_str:
+            missing_fields.append("Application Date")
 
+        if missing_fields:
+            error_message = ", ".join(missing_fields) + " required."
+            return render_template("add.html", error=error_message, form_data=request.form)
 
-        if not company or not position or not application_date_str:
-            return render_template("add.html", error="Company, Position, and Application Date are required.")
+       
         application_date = datetime.strptime(application_date_str, "%Y-%m-%d").date()
         status = request.form["status"]
         job_url = request.form.get("job_url") or None
@@ -53,13 +63,12 @@ def add_application():
             deadline = None
         
         if deadline and deadline < application_date:
-            return render_template("add.html", error="Deadline cannot be before the application date.")        
+            return render_template("add.html", error="Deadline cannot be before the application date.", form_data=request.form)
         new_app = Application(company=company, position=position, application_date=application_date, status=status, job_url=job_url, notes=notes, deadline=deadline)
         db.session.add(new_app)
         db.session.commit() 
         return redirect("/")
-    return render_template("add.html")
-
+    return render_template("add.html", form_data={})
 
 @app.route("/edit/<int:app_id>", methods=["GET", "POST"])
 def edit_application(app_id):
@@ -69,9 +78,18 @@ def edit_application(app_id):
         company = request.form["company"].strip()
         position = request.form["position"].strip()
         application_date_str = request.form.get("application_date")
+        
+        missing_fields = []
+        if not company:
+            missing_fields.append("Company")
+        if not position:
+            missing_fields.append("Position")
+        if not application_date_str:
+            missing_fields.append("Application Date")
 
-        if not company or not position or not application_date_str:
-            return render_template("edit.html", application=app_to_edit, error="Company, Position, and Application Date are required.")
+        if missing_fields:
+            error_message = ", ".join(missing_fields) + " required."
+            return render_template("edit.html", application=app_to_edit, error=error_message, form_data=request.form)
 
         app_to_edit.company = company
         app_to_edit.position = position
@@ -86,13 +104,12 @@ def edit_application(app_id):
             app_to_edit.deadline = None
             
         if app_to_edit.deadline and app_to_edit.deadline < app_to_edit.application_date:
-            return render_template("edit.html", application=app_to_edit, error="Deadline cannot be before the application date.")
+            return render_template("edit.html", application=app_to_edit, error="Deadline cannot be before the application date.", form_data=request.form)
         db.session.commit()
 
 
         return redirect("/")
-
-    return render_template("edit.html", application=app_to_edit)
+    return render_template("edit.html", application=app_to_edit, form_data={})
 
 
 @app.route("/delete/<int:app_id>")
