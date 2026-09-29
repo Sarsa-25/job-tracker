@@ -6,6 +6,12 @@
 </head>
 <body>
     
+    <a href="/">Back to Applications</a>
+
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
     <form method="POST">
     <input type="text" name="company" value="{{ application.company }}">
     <input type="text" name="position" value="{{ application.position }}">
